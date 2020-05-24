@@ -189,3 +189,107 @@ x => 2 + x
 };
 ```
 
+### ****ES6 코드 사용 사례 & 효과****
+
+일반적인 함수 표현식보다 표현이 간결하다.
+
+```
+// ES5
+var arr = [1, 2, 3];
+var pow = arr.map(function (x) {
+  return x * x;
+});
+
+console.log(pow); // [ 1, 4, 9 ]
+```
+
+```
+// ES6
+const arr = [1, 2, 3];
+const pow = arr.map(x => x * x);
+
+console.log(pow); // [ 1, 4, 9 ]
+```
+
+자바스크립트의 경우 함수 호출 방식에 의해 this에 바인딩할 어떤 객체가 동적으로 결정된다.  
+콜백 함수 내부의 this는 전역 객체 window를 가리킨다.  
+[JavaScript VS Java : This란?](https://hae-ong.tistory.com/14)
+
+[](https://hae-ong.tistory.com/14)
+
+[JavaScript vs Java] This
+
+나는 Java를 먼저 배워서 JS에서의 this또한 당연히 Java와 같겠거니 생각했었다. 때문에 이부분의 개념은 넘어가도 되겠거니 했으나...크나큰 착각이었다. Java에서의 this Java에서의 this는 객체 자신(
+
+hae-ong.tistory.com
+
+화살표 함수는 함수를 선언할 때 this에 바인딩할 객체가 정적으로 결정된다. 일반 함수와는 달리 화살표 함수의 this는 언제나 상위 스코프의 this를 가리킨다 (Lexical this - Lexical Scope와 유사하다. Lexical Scope는 차후 정리 예정)  
+call, apply, bind 혹은 변수대입 없이 상위 스코프에 this를 고정시킬 수 있다.  
+(단,  call, apply, bind 메소드를 사용하여 다른 객체로 변경이 불가하다.)
+
+```
+function Prefixer(prefix) {
+  this.prefix = prefix;
+}
+
+Prefixer.prototype.prefixArray = function (arr) {
+  // this는 상위 스코프인 prefixArray 메소드 내의 this를 가리킨다.
+  return arr.map(x => `${this.prefix}  ${x}`);
+};
+
+const pre = new Prefixer('Hi');
+console.log(pre.prefixArray(['Lee', 'Kim']));
+```
+
+### ****화살표함수의 사용을 피해야 하는 경우****
+
+메소드를 정의할 때
+
+메소드로 정의한 화살표 함수 내부의 this는 메소드를 호출한 객체(소유한 객체)를 가리키지 않고 상위 객체인 전역객체 window(global)를 가리킨다.
+
+```
+const introduce = {
+  name: 'hyewon',
+  hello: () => console.log(`Hi, My name is ${this.name}`)
+};
+
+introduce.hello(); // Hi, My name is undefined
+```
+
+생성자 함수를 사용할 때
+
+화살표 함수는 생성자 함수로 사용할 수 없다.  
+.생성자 함수는 prototype 프로퍼티가 가리키는  prototype  객체의 constructor를 사용한다. 하지만 화살표 함수는 prototype 프로퍼티를 가지고 있지 않다.
+
+```
+const Example = () => {};
+
+//prototype프로퍼티를 가지고 있는지 검사
+console.log(Example.hasOwnProperty('prototype')); // false
+
+const example = new Example(); // TypeError: Example is not a constructor
+```
+
+addEvantListener함수의 콜백함수로 사용할 때
+
+addEventListener 함수의 콜백 함수를 화살표 함수로 정의하면 this가 상위 컨택스트인 전역 객체 window를 가리킨다.  
+function키워드로 정의된 addEventListener 함수의 콜백 함수 내부의 this는 이벤트 리스너에 타겟된 요소를 가리킨다.  
+
+```
+var btn = document.getElementById('btn');
+
+btn.addEventListener('click', () => {
+  console.log(this === window); // => true
+  this.innerHTML = 'Clicked btn';
+});
+```
+
+```
+var btn = document.getElementById('btn');
+
+btn.addEventListener('click', function() {
+  console.log(this === btn); // => true
+  this.innerHTML = 'Clicked btn';
+});
+```
+
