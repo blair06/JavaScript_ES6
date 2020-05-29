@@ -339,9 +339,9 @@ obj1내에 name프로퍼티가 없으니(Down 함수내에 정의된 name이 없
 
 출처: 생활코딩
 
-__poroto__ vs prototype의 차이
+__proto__ vs prototype의 차이
 
-__poroto__
+__proto__
 
 -   __proto__  속성은 모든 객체가 가지고 있는 속성이다.
 -   객체가 생성될 때 자신의 부모 객체인 프로토타입을 가리킨다.
