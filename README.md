@@ -292,4 +292,63 @@ btn.addEventListener('click', function() {
   this.innerHTML = 'Clicked btn';
 });
 ```
+--------------
 
+Java, C++과 같은 클래스기반 언어들은 객체 생성 이전에 클래스를 정의하고 이를 통해 객체(인스턴스)를 생성한다. 이와달리 자바스크립트는 프로토타입 기반 객체지향 프로그래밍 언어이다. 따라서 프로토타입을 잘 이해하는 것이 중요하다. (ES6 에서 Class문법이 추가 되었지만 우리가 흔히아는 class가 아닌 prototype을 기반으로 만들어졌다)
+
+### **객체생성원리**  
+
+객체는 생성자를 통해 생성된다. 생성자는 새로 생성된 객체를 초기화 하는 역할을 한다.  
+정해진틀을(생성자 함수) 기계에 넣어(new 연산자) 여러개 찍어낸다고 이해하면 편리하다.
+
+function Example() {}; //생성자 함수
+var obj1 = new Example(); //생성자 함수를 이용해 생성한 객체1
+var obj2 = new Example(); //생성자 함수를 이용해 생성한 객체2
+//obj1와 obj2는 Example이라는 같은 구조를 가지고 있다
+
+JS에서는 생성자 선언없이도 객체 생성이 가능하다.(리터럴 방식) 하지만 이경우에도 결과적으로는 생성자를 통해 객체를 생성하는 것과 다름없다
+
+var obj1 = {}; //빈 객체 생성
+var obj1 = new Object(); // JS엔진이 1번코드를 해석하는 방식
+
+### **Prototype Chain (프로토타입 체인)﻿**  
+
+다음 코드를 보면 Down생성자함수는 어떤 프로퍼티도 정의되어 있지 않은 빈 함수이지만 Down함수를 통해 생성된 객체obj의 name프로퍼티를 출력해보니 this is up이라는 문구가 출력되었다. Down이 빈함수이니 obj도 빈 객체여야 하는것 아닌가? name은 대체 어디서 나타났을까?
+
+프로토타입 체인은 객체의 프로퍼티(현 코드에선 name)를 사용할때 해당 property가 없다면, prototype 프로퍼티를 이용해 생성자 함수의 Prototype object에서 프로퍼티(현 코드에선 name)를 찾는다. 만약 Prototype object에도 해당  프로퍼티가 없다면 다시 이 과정을 반복해 상위 Prototype object에서 프로퍼티를 찾는다. 이렇게 계속 반복이 이루어지며 해당 프로퍼티를 찾게 된다면 값을 반환하고 찾지 못한다면 undefined를 반환한다.
+
+function Up() {}
+Up.prototype.name = "this is up";
+
+function Middle() {}
+Middle.prototype = new Up();
+
+function Down() {}
+Down.prototype = new Middle();
+
+var obj1 = new Down();
+console.log(obj1.name); // this is up
+
+obj1내에 name프로퍼티가 없으니(Down 함수내에 정의된 name이 없기때문) Down함수를 생성한 Middle함수로 올라가 name을 찾아본다. 역시나 name프로퍼티가 없으므로 Middle함수를 생성한 Up 함수에서 프로퍼티를 찾아서 name을 출력한다.
+
+이런일이 어떻게 가능할까?  
+
+함수를 정의하면 함수가 생성되며  Prototype object가 같이 생성 된다. Prototype object에는 함수의 원형(메소드 등등)이 저장되어 있으며 생성된 Prototype object는 함수의  prototype  속성을 통해 접근할 수 있다.
+
+![](https://k.kakaocdn.net/dn/bAfqt6/btqEwQ5stoj/Qfi2eokVv8x0djPDBhN14K/img.png)
+
+출처: 생활코딩
+
+__poroto__ vs prototype의 차이
+
+__poroto__
+
+-   __proto__  속성은 모든 객체가 가지고 있는 속성이다.
+-   객체가 생성될 때 자신의 부모 객체인 프로토타입을 가리킨다.
+
+prototype
+
+-   함수 객체만이 가지는 프로토타입
+-   함수 객체가 생성자로 사용될 때 인스턴스의 부모 역할을 하는 객체를 가리킨다.
+
+##
