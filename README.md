@@ -352,3 +352,48 @@ prototype
 -   함수 객체가 생성자로 사용될 때 인스턴스의 부모 역할을 하는 객체를 가리킨다.
 
 ##
+--------
+
+### **Rest Parameter란?**
+
+Rest 파라미터(Rest Parameter, 나머지 매개변수)는 매개변수 이름 앞에 세개의 점 ... 을 붙여서 정의한 매개변수를 의미한다. Rest 파라미터는 함수에 전달된 인자(argument)들의 목록을 배열로 전달받는다.
+
+function example(a,b,...rest) {
+  console.log(Array.isArray(rest)); // true
+  console.log(rest); // [ 3, 4, 5 ],
+}
+
+example(1, 2, 3, 4, 5);
+
+함수의 마지막 파라미터의 앞에 ... 를 붙여 (사용자가 제공한) 모든 나머지 인수를 자바스크립트 배열로 대체한다.마지막 파라미터만 Rest Parameter가 될 수 있다.
+
+function example (a,b,...array){} // 매개변수 a,b를 제외한 나머지 인자들을 받아 array라는 배열을 생성한다.
+
+### **Rest Parameter 적용사례 및 효과﻿**  
+
+﻿함수의 매개변수를 받아 배열을 만들때 보다 쉽고 간단한 코드작성이 가능하다.
+
+// argument를 사용해 배열 만들기
+function makeArray(a, b) {
+// 배열을 만드는 방법 3가지
+  var normalArray = Array.prototype.slice.call(arguments);
+  var normalArray = [].slice.call(arguments);
+  var normalArray = Array.from(arguments);
+
+  var first = normalArray.shift(); //첫번째 인자를 반환
+}
+
+// rest parameter를 사용해 배열 만들기
+function makeArray(...args) {
+  var normalArray = args;
+  var first = normalArray.shift(); // 첫번째 인자를 반환
+}
+
+  
+
+arguments와 rest parameter의 차이점﻿  
+arguments는 유사 배열 객체고 rest는 배열이다.
+
+유사 배열 객체는 간단하게 배열처럼 사용할 수 있는 객체를 말한다. 배열과 유사하게 사용가능하지만 arguments는 유사배열객체이기 때문에 Array Object의 메소드를 사용할 수 없다.
+
+따라서 ES6의 arrow function에 arguments는 사용할 수 없을 뿐더러 Rest 파라미터를 사용하면 더 유연한 코드를 작성할 수 있기 때문에 Rest 파라미터 사용을 권장한다.
